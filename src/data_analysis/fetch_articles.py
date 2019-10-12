@@ -15,7 +15,7 @@ NUM_SAMPLES_PER_SOURCE = 2
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 conn = sqlite3.connect("documents.db")
 c = conn.cursor()
-c.execute('''CREATE TABLE documents(title text, source text, url text,
+c.execute('''CREATE TABLE documents(label text, title text, source text, url text,
              author text, description text, content text)''')
 conn.commit()
 
@@ -70,26 +70,26 @@ def articles_about_subject(subject):
         ordered_articles = ordered_articles[:sample_size]
         print(ordered_articles[0])
         p = Pool(NUM_PROC)
-        content_list = p.map(save_article, ordered_articles)
+        content_list = p.starmap(save_article, [(article, subject) for article in ordered_articles])
 
-def save_article(article):
+def save_article(article, label):
     url = article["url"]
     source = article["source"]["id"]
     try:
         content = get_content(url, source)
         if content:
-            save_to_db(article, content)
+            save_to_db(article, content, label)
     except Exception as e:
         print("    ERROR: ", url)
         print("    ",e)
 
-def save_to_db(article, content):
+def save_to_db(article, content, label):
     title = article["title"]
     source = article["source"]["name"]
     url = article["url"]
     author = article["author"]
     description = article["description"]
-    c.execute("INSERT INTO documents(title, source, url, author, description, content) VALUES (?, ?, ?, ?, ?, ?)", (title, source, url, author, description, content))
+    c.execute("INSERT INTO documents(label, title, source, url, author, description, content) VALUES (?, ?, ?, ?, ?, ?, ?)", (label, title, source, url, author, description, content))
     conn.commit()
 
 def sample():
