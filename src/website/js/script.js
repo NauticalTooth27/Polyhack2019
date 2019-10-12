@@ -8,9 +8,7 @@ function ArticleInfo(title, publisher, date, topic, description, sentiment,leani
     this.leaning = leaning;
 }
 
-function myFunction() {
-    confirm("Test");
-}
+var popupWindow = null;
 
 const LEFT = 0;
 const CENTER = 1;
@@ -27,20 +25,19 @@ function printArticle(leaning) {
         return;
     }
 
-    document.write(article.title + " | " + article.publisher + "<br>" +
-                    article.date + " | " + article.topic + "<br>" +
-                    article.description + "<br>" + article.sentiment);
+    document.write
+    ("<button onclick = 'popupArticle('popuparticle.html',article.title,'500','500','100','100','no',article);'>"
+    + article.title + article.publisher + "</button>");
     return;
 }
 
-function printArticle(leaning,printWindow,article) {
-    var article = getNextArticle(leaning);
+function printArticleSmart(printWindow,article) {
     if(article == null) {
         printWindow.document.write("<br>");
         return;
     }
 
-    printWindow.document.write(article.title + " | " + article.publisher + "<br>" +
+    printWindow.document.write(article.title + "<br>" + article.publisher + "<br>" +
                     article.date + " | " + article.topic + "<br>" +
                     article.description + "<br>" + article.sentiment);
     return;
@@ -57,10 +54,10 @@ function getNextArticle(leaning) {
     return null;
 }
 
-var popupWindow = null;
 function popupArticle(url,winName,w,h,t,l,scroll,article){
+    console.log("Skree");
     settings = 'height='+h+',width='+w+',top='+t+',left='+l+',scrollbars='+
             scroll+',resizable';
     popupWindow = window.open(url,winName,settings);
-    printArticle
+    printArticleSmart(popupWindow,article);
 }
