@@ -10,6 +10,14 @@ import numpy as np
 
 NUM_KEYWORDS = 15
 
+# Bias indices
+LEFT = 0
+CENTER = 1
+RIGHT = 2
+
+# Source biases
+SOURCE_BIASES = {"Time":LEFT, "The Huffington Post":LEFT, "Politico":LEFT, "ABC News":CENTER, "Fox News":RIGHT, "The Hill":CENTER}
+
 # keywordify
 # Takes list of N strings for documents
 # Returns 2D, NxM list of string keywords; match up to articles
@@ -72,6 +80,29 @@ def cluster_docs(data, word_list) :
     kmeans = KMeans(n_clusters=3).fit(data)
     print(kmeans.labels_)
     return kmeans
+
+def euclidean_distance(v1, v2) :
+    assert(len(v1) == len(v2))
+    sum = 0
+    for i in range(len(v1)) :
+        sum += (v1[i] - v2[i]) ** 2
+
+
+def get_nearest_other_bias(data, target_doc, doc_sources, bias=CENTER) :
+
+    low_dist = -1
+    low_dist_idx = -1
+
+    for idx in data :
+        if not SOURCE_BIASES[doc_sources[idx]] == bias :
+            continue
+        if low_dist == -1 :
+            low_dist = euclidean_distance(data[idx], target_doc)
+            low_dist_idx = idx
+    if low_dist_idx == -1 :
+        return None
+    else :
+        return low_dist_idx
 
 
     #######
