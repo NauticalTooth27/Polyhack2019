@@ -5,7 +5,8 @@ from collections import defaultdict
 import math
 import string
 
-from sklearn.cluster import KMeans
+from sklearn.cluster import DBScan
+
 import numpy as np
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -80,13 +81,6 @@ def keywordify(documents) :
 
     return doc_vecs, word_list, sentiments
 
-
-def cluster_docs(data, word_list) :
-    data = np.array(data)
-    kmeans = KMeans(n_clusters=3).fit(data)
-    print(kmeans.labels_)
-    return kmeans
-
 def euclidean_distance(v1, v2) :
     assert(len(v1) == len(v2))
     sum = 0
@@ -94,21 +88,23 @@ def euclidean_distance(v1, v2) :
         sum += (v1[i] - v2[i]) ** 2
 
 
-def get_nearest_other_bias(data, target_doc, doc_sources, bias=CENTER) :
 
-    low_dist = -1
-    low_dist_idx = -1
+# Deprecated - doc_sources passed differently
+# def get_nearest_other_bias(data, target_doc, doc_sources, bias=CENTER) :
 
-    for idx in data :
-        if not SOURCE_BIASES[doc_sources[idx]] == bias :
-            continue
-        if low_dist == -1 :
-            low_dist = euclidean_distance(data[idx], target_doc)
-            low_dist_idx = idx
-    if low_dist_idx == -1 :
-        return None
-    else :
-        return low_dist_idx
+    # low_dist = -1
+    # low_dist_idx = -1
+    #
+    # for idx in data :
+    #     if not SOURCE_BIASES[doc_sources[idx]] == bias :
+    #         continue
+    #     if low_dist == -1 :
+    #         low_dist = euclidean_distance(data[idx], target_doc)
+    #         low_dist_idx = idx
+    # if low_dist_idx == -1 :
+    #     return None
+    # else :
+    #     return low_dist_idx
 
 
 
@@ -154,6 +150,74 @@ def get_shared_keywords(doc_vecs, word_list) :
         shared.append(word_list[i])
     return shared
 
+
+##### New Deal #####
+
+def cluster_docs(data, word_list) :
+    data = np.array(data)
+    dbscan = DBScan().fit(data)
+    labels = dbscan.labels
+
+    num_clusters = max(labels)
+    cluster = np.empty([num_clusters, 1])   # This might not work
+
+    for doc_idx in range(len(data)) :
+        if labels[doc_idx] == -1 :
+            continue
+        cluster[ labels[doc_idx] ].append(doc_idx)
+
+    return cluster
+
+
+# Takes list of doc indices from cluster_docs, returns three lists sorted by bias from doc_sources
+def partition(doc_indices, doc_sources) :
+    biases = [[], [], []]   # 0 = left, 1 = center, 2 = right
+
+    for idx in doc_indices :
+        biases[doc[sources[idx]]].append(idx)
+
+    return biases
+
+
+# def medoid(v1, v2) :
+#     dist_matrix = np.zeros((len(v1), len(v2)))
+#     for i in range(len(v1) - 1) :
+#         for j in range(i + 1, len(v2)) :
+#             coord_1 = (v1[i], v2[i])
+#             ""
+#             dist_matrix[i, j] = distance(coord1, coord2)
+#             dist_matrix[j, i] = distance[j, i] = dist_matrix[i, j]
+#     medoid_index = np.argmin(dist_matrix.sum(axis=0))
+#     medoid = ( lat[medoid_index], long[medoid_index] )
+#     return medoid
+
+def medoid(doc_indices, data) :
+    dist_matrix = np.zeros(len(doc_indices), len(doc_indices))
+    for i in range(len(doc_indices) - 1) :
+        for j in range(i + 1, len(doc_indices)) :
+            doc_1 = data[i]
+            doc_2 = data[j]
+            dist_matrix[i, j] = euclidean_distance(doc_1, doc_2)
+            dist_matrix[j, i] = dist_matrix[i, j]
+    medoid_index = np.argmin(dist_matrix.sum(axis=0))
+    medoid = doc_indices[medoid_index]
+    return medoid
+
+
+## RUN THIS ##
+def docs_to_biased(document_texts, doc_sources) :
+
+    doc_vecs, word_list, sentiments = keywordify(document_texts)
+
+    clusters = cluster_docs(doc_vecs, word_list)
+    result = np.empty(len(clusters))
+    for topic_idx in range(len(clusters)) :
+        biases = partition(clusters[topic_idx])
+        meds = [medoid(biases[0], doc_vecs), medoid(biases[1], doc_vecs), medoid(biases[2], doc_vecs)]
+        for i in range(len(meds)) :
+            meds[i] = (meds[i], sentiments[meds[i]])
+        result[topic_idx] = meds
+    return result
 
 
     #######
