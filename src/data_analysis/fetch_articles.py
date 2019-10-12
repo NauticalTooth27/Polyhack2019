@@ -2,6 +2,7 @@ from requests_html import HTMLSession
 # IMPORTANT - use websockets==6.0 (not more recent version)
 import os
 import random
+import sqlite3
 from newsapi import NewsApiClient
 
 # Set constants
@@ -9,6 +10,11 @@ NEWS_API_KEY = os.environ["NEWS_API_KEY"]
 
 
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
+conn = sqlite3.connect("documents.db")
+c = conn.cursor()
+#c.execute('''CREATE TABLE documents(title text, source text, url text,
+#             author text, description text, publishedAt Date, content text)''')
+#conn.commit()
 
 '''
 1. Get list of news from newsapi
@@ -50,6 +56,7 @@ def articles_about_subject(subject):
     filtered_articles = list()
     for source in all_sources:
         top_headlines = newsapi.get_everything(sources = source, q = subject)
+
         if not top_headlines["articles"]:
             print("None found: ", subject, source)
             continue
@@ -64,9 +71,30 @@ def articles_about_subject(subject):
 
     return documents
 
-documents = articles_about_subject("Giuliani")
-documents.extend(articles_about_subject("impeachment"))
-documents.extend(articles_about_subject("Turkey"))
+def save_to_db(article, content):
+    title = article["title"]
+    source = article["source"]["name"]
+    url = article["url"]
+    author = article["author"]
+    publishedAt = article["Date"]
+    c.execute("INSERT INTO documents VALUES ({}, {}, {}, {}, {}, {}, {})".format(
+        title, source, url, author, publishedAt, content))
+
+def all_articles():
+    filtered_articles = list()
+    for source in all_sources:
+        top_headlines = newsapi.get_everything(sources = source, pageSize = 100)
+        for top_headlines["articles"]
+        filtered_articles.extend(random.choice(top_headlines["articles"]))
+
+    documents = list()
+    for article in filtered_articles:
+        url = article["url"]
+        source = article["source"]["id"]
+        content = get_content(url, source)
+        documents.append(content)
+
+    return documents
 
 for i in range(len(documents)):
     with open("../../resources/sample_documents/document{}.txt".format(i), "w+") as file:
