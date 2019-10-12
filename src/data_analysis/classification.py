@@ -5,7 +5,7 @@ from collections import defaultdict
 import math
 import string
 
-from sklearn.cluster import DBScan
+from sklearn.cluster import DBSCAN
 
 import numpy as np
 
@@ -155,16 +155,17 @@ def get_shared_keywords(doc_vecs, word_list) :
 
 def cluster_docs(data, word_list) :
     data = np.array(data)
-    dbscan = DBScan().fit(data)
-    labels = dbscan.labels
+    dbscan = DBSCAN(eps=20, min_samples=2).fit(data)
+    labels = dbscan.labels_
+    print(labels)
 
-    num_clusters = max(labels)
+    num_clusters = max(labels) + 1
     cluster = np.empty([num_clusters, 1])   # This might not work
 
     for doc_idx in range(len(data)) :
         if labels[doc_idx] == -1 :
             continue
-        cluster[ labels[doc_idx] ].append(doc_idx)
+        np.append(cluster[ labels[doc_idx] ], doc_idx)
 
     return cluster
 
@@ -172,9 +173,10 @@ def cluster_docs(data, word_list) :
 # Takes list of doc indices from cluster_docs, returns three lists sorted by bias from doc_sources
 def partition(doc_indices, doc_sources) :
     biases = [[], [], []]   # 0 = left, 1 = center, 2 = right
+    print(doc_indices)
 
     for idx in doc_indices :
-        biases[doc[sources[idx]]].append(idx)
+        biases[doc_sources[idx]].append(idx)
 
     return biases
 
@@ -212,7 +214,7 @@ def docs_to_biased(document_texts, doc_sources) :
     clusters = cluster_docs(doc_vecs, word_list)
     result = np.empty(len(clusters))
     for topic_idx in range(len(clusters)) :
-        biases = partition(clusters[topic_idx])
+        biases = partition(clusters[topic_idx], doc_vecs)
         meds = [medoid(biases[0], doc_vecs), medoid(biases[1], doc_vecs), medoid(biases[2], doc_vecs)]
         for i in range(len(meds)) :
             meds[i] = (meds[i], sentiments[meds[i]])
@@ -226,9 +228,9 @@ docs = [""] * 15
 for i in range(15) :
 	with open("../../resources/sample_documents/document{}.txt".format(i)) as f :
 		docs[i] = f.read()
-
-doc_vecs, word_list, sentiment = keywordify(docs)
-cluster_docs(doc_vecs, word_list)
+bias_list = [0, 0, 2, 2, 1, 1, 0, 0, 0, 0, 1, 1, 2, 1, 1]
+# doc_vecs, word_list, sentiment = keywordify(docs)
+docs_to_biased(docs, bias_list)
 
 
 
