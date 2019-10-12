@@ -24,7 +24,7 @@
       }
       .column.container {
         width: 30%;
-        height: documentElement.clientHeight;
+        height: window.innerHeight;
         position: relative;
         background: #f6f8fa;
       }
@@ -32,24 +32,33 @@
         width: 30px;
         height: 30px;
         position: absolute;
+        top: 0;
+        right: 0;
         background: red;
       }
       #animate2 {
         width: 30px;
         height: 30px;
         position: absolute;
+        top: 100%;
+        right: 25%;
         background: blue;
       }
       #animate3 {
         width: 30px;
         height: 30px;
         position: absolute;
+        top: 0;
+        right: 50%;
         background: red;
       }
       #animate4 {
         width: 30px;
         height: 30px;
         position: absolute;
+        top: 100%;
+        right: 75%;
+        
         background: blue;
       }
 
@@ -61,17 +70,18 @@
 }
   </style>
 </head>
-  
 
 <body>
+  
   <div class="row">
   <div class="column left_column"> 
+  
     <main role="main">
       <img src="images/Logo.png" alt="NYO HO HO HO" width="100%"/>
         <article>
           <h2 class="article_representation1"> <img src="images/red-arrow.png" alt="Kono Dio Da" height="18" width="45"/> Today's top headline:</h2>
-          <button onclick="scrollingUp(documentElement.clientHeight, documentElement.clientWidth, 1);">Click here</button>
           </article>
+          
       </main>
       <section>
         <table border="1">
@@ -123,12 +133,18 @@
       </section>
       <p class="credits"> Made by the Invincible, Fearless, Sensual, Mysterious, Enchanting, Vigorous, Diligent, Overwhelming, Gorgeous, Passionate, Terrifying, Beautiful, Powerful, Miles Izydorczak</p>
   </div>
-
   <div class="column container" >
     <div id="animate" >
     </div>
+    <div id="animate2" ></div>
+    <div id="animate3"></div>
+    <div id="animate4"></div>
+  </div>    
   </div>
-   </div>
 
+    <script>scrollingUp(1); </script>
+   
   </body>
+
+
 </html>
