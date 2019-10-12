@@ -9,3 +9,8 @@ color: rgb(255, 255, 255); font-size: 12px; line-height: 12px; padding: 5px; bor
 background: #1C6EA4; }
 .myButton:active {
 background: #144E75; }
+
+.article {
+	color: blue;
+	font-size: 18px;
+}
