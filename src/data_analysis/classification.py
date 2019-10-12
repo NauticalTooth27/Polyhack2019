@@ -2,6 +2,7 @@ import nltk
 from nltk.corpus import stopwords
 from collections import Counter
 import math
+import string
 
 from sklearn.cluster import KMeans
 import numpy as np
@@ -27,11 +28,13 @@ def keywordify(documents) :
     # Clean and tokenize all docs
     for doc_idx in range(num_docs) :
         sent_tokens = tokenizer.tokenize(documents[doc_idx].strip())
-        word_tokens = [word_tokenizer.word_tokenize(sent) for sent in sent_tokens]
+        word_tokens = [word_tokenizer.word_tokenize(sent.lower()) for sent in sent_tokens]
         tokens = []
         for wt in word_tokens :
+            # for w in wt :
+            #     w = w.strip(string.punctuation)
             tokens.extend(wt)
-        tokens = [lemmatizer.lemmatize(token) for token in tokens if token not in stop_words]
+        tokens = [lemmatizer.lemmatize(token).strip(string.punctuation + "–—“’") for token in tokens if token not in stop_words and token not in string.punctuation + "–—“’ "]
         term_freqs[doc_idx] = Counter(tokens)
         all_freqs += term_freqs[doc_idx]
 
@@ -66,7 +69,7 @@ def keywordify(documents) :
 
 def cluster_docs(data, word_list) :
     data = np.array(data)
-    kmeans = KMeans(n_clusters=6).fit(data)
+    kmeans = KMeans(n_clusters=3).fit(data)
     print(kmeans.labels_)
     return kmeans
 
