@@ -15,20 +15,27 @@ var articles = [
     new ArticleInfo("Yeet","CNN","10/11/19","Climate Change","Yeet the Wheat","Good",LEFT),
     new ArticleInfo("Skree","Fox News","10/11/19","Climate Change","Don't Yeet the Wheat","Bad",RIGHT)
 ];
-var currIndex = 1;
 
 function printArticle(leaning) {
-    console.log("yeet");
-    if(currIndex == -1) {
+    var article = getNextArticle(leaning);
+    if(article == null) {
         document.write("<br>");
         return;
     }
-    if(leaning == LEFT) {
-        document.write("l");
-    } else if(leaning == CENTER) {
-        document.write("c");
-    } else if(leaning == RIGHT) {
-        document.write("r");
-    }
+
+    document.write(article.title + " | " + article.publisher + "<br>" +
+                    article.date + " | " + article.topic + "<br>" +
+                    article.description + "<br>" + article.sentiment);
     return;
+}
+
+function getNextArticle(leaning) {
+    for (var i = 0; i <= articles.length; i++) {
+        if (articles[i] != null && articles[i].leaning == leaning) {
+            var temp = articles[i];
+            articles[i] = null;
+            return temp;
+        }
+    }
+    return null;
 }
