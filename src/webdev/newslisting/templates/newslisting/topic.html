@@ -1,0 +1,9 @@
+<h1>{{ topic.topic_text }}</h1>
+
+<ul>
+{% for article in topic.article_set.all %}
+    <li>{{ article.title }} : {{ article.link }}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'newslisting:index'%}">Return to Home</a>
