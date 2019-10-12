@@ -1,3 +1,21 @@
+.partitions {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+}
+
+.left-partition {
+        width: 75%;
+}
+
+.right-partition {
+        width: 25%;
+        height: window.innerHeight;
+        position: relative;
+        color: #f6f8fa;
+        margin: 1%;
+}
+
 h1 {
         font-family: 'Oswald', sans-serif;
         font-size: 48;
@@ -35,6 +53,39 @@ a {
         margin-left: 1%;
         margin-right: 1%;
         color: #181819;
+}
+
+.red {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  background: red;
+}
+
+.blue {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  background: blue;
+}
+
+#red1 {
+        top: 0;
+        right: 0;
+}
+
+#blue1 {
+        top: 100%;
+        right: 25%;
+}
+
+#red2 {
+        top: 0;
+        right: 50%;
+}
+#blue2 {
+        top: 100%;
+        right: 75%;
 }
 
 img {
