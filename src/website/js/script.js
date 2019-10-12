@@ -65,20 +65,37 @@ function popupArticle(url,numarticle){
     printArticleSmart(popupWindow,article);
 }
 
-function scrollingUp(height, width, speed) {
-  var elem = document.getElementById("animate");
-    width = width / 10 * 3;
-    var count = 0;
+
+function scrollingUp(speed) {
+  var elem1 = document.getElementById("animate");
+  var elem2 = document.getElementById("animate2");
+  var elem3 = document.getElementById("animate3");
+  var elem4 = document.getElementById("animate4");
+  var count = 0;
   var pos = 0;
+  var posrev = window.innerHeight;
   var id = setInterval(frame, speed);
   function frame () {
-    if (pos == height) {
-            elem.style.right = (count * 30) % width + 'px';
-            count++;
-      pos = -30;
+    var w = 0.0
+    var w = window.innerWidth;
+    w = w / 10 * 3;
+    var h = window.innerHeight;
+    if (pos == h) {
+           // count++;
+           // elem1.style.left += ((count * 30) % w) + 'px';
+           // elem2.style.left += ((count * 30) % w) + 'px';
+            //elem3.style.left += ((count * 30) % w) + 'px';
+           // elem4.style.left += ((count * 30) % w) + 'px';
+        pos = -30;
+        posrev = window.innerHeight;
     } else {
       pos++;
-      elem.style.top = pos + 'px';
+      posrev--;
+      elem1.style.top = pos + 'px';
+      elem2.style.top = posrev + 'px';
+      elem3.style.top = pos + 'px';
+      elem4.style.top = posrev + 'px';
     }
   }
 }
+
