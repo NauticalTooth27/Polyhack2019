@@ -12,7 +12,7 @@
         width: 25%;
         height: window.innerHeight;
         position: relative;
-        color: #f6f8fa;
+        background-color: #f6f8fa;
         margin: 1%;
 }
 
@@ -56,17 +56,18 @@ a {
 }
 
 .red {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  background: red;
+        width: 25%;
+        height: auto;
+        position: absolute;
+        background: url("/images/red.png");
 }
 
 .blue {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  background: blue;
+        width: 25%;
+        height: auto;
+        position: absolute;
+        background: blue;
+        background: url("/images/blue.png");
 }
 
 #red1 {
