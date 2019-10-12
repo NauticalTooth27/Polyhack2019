@@ -25,9 +25,8 @@ function printArticle(leaning) {
         return;
     }
 
-    document.write
-    ("<button onclick = 'popupArticle('popuparticle.html',article.title,'500','500','100','100','no',article);'>"
-    + article.title + article.publisher + "</button>");
+    document.write("<button onclick = 'popupArticle('popuparticle.html',article);'>"
+    + article.title + " | " + article.publisher + "</button>");
     return;
 }
 
@@ -54,10 +53,9 @@ function getNextArticle(leaning) {
     return null;
 }
 
-function popupArticle(url,winName,w,h,t,l,scroll,article){
+function popupArticle(url,article){
     console.log("Skree");
-    settings = 'height='+h+',width='+w+',top='+t+',left='+l+',scrollbars='+
-            scroll+',resizable';
-    popupWindow = window.open(url,winName,settings);
+    settings = 'height='+500+',width='+500+',top='+100+',left='+100+',scrollbars=no,resizable';
+    popupWindow = window.open(url,article.title,settings);
     printArticleSmart(popupWindow,article);
 }
