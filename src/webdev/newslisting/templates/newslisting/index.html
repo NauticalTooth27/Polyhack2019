@@ -1,16 +1,39 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'newslisting/style.css' %}">
-<link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
-<h>Topics</h>
+<div class="right-partition">
+</div>
 
-{% if latest_topics_list %}
-    <ul>
-    {% for topic in latest_topics_list %}
-        <li><a href="/wholestory/{{ topic.id }}/">{{ topic.topic_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No topics are available.</p>
-{% endif %}
+<div class="left-partition">
+        <div class="logo">
+                <img id="Logo" src="{% static 'newslisting/images/Logo.png' %}" alt="Logo">
+        </div>
+
+        {% if latest_topics_list %}
+                <div class = "topic_table">
+                        <div class = "tab_row">
+                                <div class = "tab_elem"><h1>Left</h1></div>
+                                <div class = "tab_elem"><h1>Center</h1></div>
+                                <div class = "tab_elem"><h1>Right</h1></div>
+                        </div>
+                        {% for topic in latest_topics_list %}
+                                <div class = "tab_row">
+                                        {% for article in topic.article_set.all %}
+                                                <div class = "tab_elem">
+                                                        <a href="{{ article.link }}">{{ article.title }}</a>
+                                                        <p>{{ article.author }}</p>
+                                                        <p>{{ article.outlet }}</p>
+                                                        <p>{{ article.sentiment }} sentiment</p>
+                                                </div>
+                                        {% endfor %}
+                                </div>
+                        {% endfor %}
+                </div>
+        {% else %}
+                <p>No topics are available.</p>
+        {% endif %}
+</div>
