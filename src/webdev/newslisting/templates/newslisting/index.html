@@ -1,0 +1,9 @@
+{% if latest_topics_list %}
+    <ul>
+    {% for topic in latest_topics_list %}
+        <li><a href="/wholestory/{{ topic.id }}/">{{ topic.topic_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No topics are available.</p>
+{% endif %}
