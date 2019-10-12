@@ -1,5 +1,6 @@
-html { background-color: #f6f8fa;}
+@import url('https://fonts.googleapis.com/css?family=Varela+Round&display=swap');
 
+html { background-color: #f6f8fa;}
 
 .tab { margin-left: 40px; }
 
@@ -10,7 +11,15 @@ background: #1C6EA4; }
 .myButton:active {
 background: #144E75; }
 
-.article_representation {
+
+.article_representation1 {
 	color: blue;
 	font-size: 18px;
+	font-family: "Varela Round";
+}
+
+.article_representation2 {
+	color: red;
+	font-size: 18px;
+	font-family: "Varela Round";
 }
