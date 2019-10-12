@@ -59,3 +59,22 @@ function popupArticle(url,article){
     popupWindow = window.open(url,article.title,settings);
     printArticleSmart(popupWindow,article);
 }
+
+function scrollingUp(height, width, speed) {
+  var elem = document.getElementById("animate");
+    width = width / 10 * 3;
+    var count = 0;
+  var pos = 0;
+  var id = setInterval(frame, speed);
+  function frame () {
+    if (pos == height) {
+            elem.style.right = (count * 30) % width + 'px';
+            count++;
+      pos = -30;
+    } else {
+      pos++;
+      elem.style.top = pos + 'px';
+    }
+  }
+}
+
