@@ -5,7 +5,7 @@ from django.views import generic
 #from django.http import HttpResponse
 #from django.shortcuts import loader
 
-from .models import Topic, Article, Quote
+from .models import Topic, Article
 
 class IndexView(generic.ListView):
     template_name = 'newslisting/index.html'

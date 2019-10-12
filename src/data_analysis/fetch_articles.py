@@ -8,8 +8,8 @@ from newsapi import NewsApiClient
 from multiprocessing import Pool
 
 # Set constants
-NEWS_API_KEY = os.environ["NEWS_API_KEY"]
-NUM_PROC = 2
+NEWS_API_KEY = "8ff68b63c768444394d75e5ab45cd3a6"#os.environ["NEWS_API_KEY"]
+NUM_PROC = 8
 NUM_SAMPLES_PER_SOURCE = 2
 
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
@@ -96,6 +96,7 @@ def sample():
     articles_about_subject("Giuliani")
     articles_about_subject("impeachment")
     articles_about_subject("Turkey")
+    articles_about_subject("Hong Kong")
 
 def all_articles():
     filtered_articles = list()
