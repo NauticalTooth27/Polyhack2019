@@ -1,14 +1,17 @@
 import nltk
 from nltk.corpus import stopwords
 from collections import Counter
+from collections import defaultdict
 import math
 import string
 
 from sklearn.cluster import KMeans
 import numpy as np
 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-NUM_KEYWORDS = 15
+
+NUM_KEYWORDS = 10
 
 # Bias indices
 LEFT = 0
@@ -33,9 +36,12 @@ def keywordify(documents) :
     all_freqs = Counter()
     keywords = [None] * num_docs
 
+    sentiments = [None] * num_docs
+
     # Clean and tokenize all docs
     for doc_idx in range(num_docs) :
         sent_tokens = tokenizer.tokenize(documents[doc_idx].strip())
+        sentiments[doc_idx] = get_sentiment(sent_tokens)
         word_tokens = [word_tokenizer.word_tokenize(sent.lower()) for sent in sent_tokens]
         tokens = []
         for wt in word_tokens :
@@ -72,7 +78,7 @@ def keywordify(documents) :
 
     word_list = list(all_freqs.keys())
 
-    return doc_vecs, word_list
+    return doc_vecs, word_list, sentiments
 
 
 def cluster_docs(data, word_list) :
@@ -105,6 +111,51 @@ def get_nearest_other_bias(data, target_doc, doc_sources, bias=CENTER) :
         return low_dist_idx
 
 
+
+def get_sentiment(tokenized_sentences) :
+    sid = SentimentIntensityAnalyzer()
+    total_scores = defaultdict(float)
+
+    for sentence in tokenized_sentences :
+        scores = sid.polarity_scores(sentence)
+        for key in scores :
+            total_scores[key] += scores[key]
+
+    compound = total_scores['compound']
+
+    if compound > 0.75 :
+        return "Very positive"
+    elif compound > 0.25 :
+        return "Rather positive"
+    elif compound > -0.25 :
+        return "Fairly neutral"
+    elif compound > -0.75 :
+        return "Rather negative"
+    else :
+        return "Very negative"
+
+
+# Returns a list of shared keywords between at least one doc vector - if the
+#   vectors share no words, a list with just the empty string is returned.
+def get_shared_keywords(doc_vecs, word_list) :
+    shared = []
+    vec_length = len(doc_vecs[0])
+    for vec in doc_vecs :
+        if not len(vec) == vec_length :
+            return [""]
+
+    for i in range(vec_length) :
+        target = True if doc_vecs[0][i] > 0 else False
+        for j in range(len(doc_vecs)) :
+            curr_val = True if doc_vecs[j][i] > 0 else False
+            if not curr_val == target :
+                break
+
+        shared.append(word_list[i])
+    return shared
+
+
+
     #######
 
 docs = [""] * 15
@@ -112,5 +163,15 @@ for i in range(15) :
 	with open("../../resources/sample_documents/document{}.txt".format(i)) as f :
 		docs[i] = f.read()
 
-doc_vecs, word_list = keywordify(docs)
+doc_vecs, word_list, sentiment = keywordify(docs)
 cluster_docs(doc_vecs, word_list)
+
+
+
+
+# Citations:
+# Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for
+#   Sentiment Analysis of Social Media Text. Eighth International Conference on
+#   Weblogs and Social Media (ICWSM-14). Ann Arbor, MI, June 2014.
+#
+#
