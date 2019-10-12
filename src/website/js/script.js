@@ -81,8 +81,8 @@ function scrollingUp(speed) {
     w = w / 10 * 3;
     var h = window.innerHeight;
     if (pos == h) {
-           // count++;
-           // elem1.style.left += ((count * 30) % w) + 'px';
+            count++;
+            elem1.style.left = "75%";
            // elem2.style.left += ((count * 30) % w) + 'px';
             //elem3.style.left += ((count * 30) % w) + 'px';
            // elem4.style.left += ((count * 30) % w) + 'px';
