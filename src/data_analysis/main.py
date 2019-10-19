@@ -23,6 +23,24 @@ source2bias = {
 "Time":LEFT
 }
 
+source2bias = {
+"CNN": LEFT,
+"The New York Times": LEFT,
+"Time": LEFT,
+"The Huffington Post": LEFT,
+"Politico": LEFT,
+"BBC News": CENTER,
+"The Hill": CENTER,
+"The Wall Street Journal": CENTER,
+"Reuters": CENTER,
+"USA Today": CENTER,
+"Fox News": RIGHT,
+"The Washington Times": RIGHT,
+"The American Conservative": RIGHT,
+"Daily Mail": RIGHT,
+"Breitbart News": RIGHT
+}
+
 bias = []
 content = []
 title = []
